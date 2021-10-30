@@ -4,35 +4,40 @@ def calculate_npv(cfs, k, i):
     summ = 0
     for index, cf in enumerate(cfs):
         t = index + 1
-        value = cf / (1 + k) ** t
-        summ += value
+        summ += cf / (1 + k) ** t
     return summ - i
 
 
-default_column_width = 13
-column_widths = {
+def format_row_data(data):
+    tint = "{0:,}"
+    tfloat = "{0:,.2f}"
+    tpercent = "{0}%"
+    templates = [tint, tint, tint, tint, tint, tint, tint, tpercent, tfloat]
+    return [templates[idx].format(value) for idx, value in enumerate(data)]
+
+
+default_col_width = 13
+col_widths = {
     'idw': 3,
     'icw': 17,
-    'y1w': default_column_width,
-    'y2w': default_column_width,
-    'y3w': default_column_width,
-    'y4w': default_column_width,
-    'y5w': default_column_width,
-    'yrw': default_column_width,
-    'npvw': default_column_width,
+    'y1w': default_col_width,
+    'y2w': default_col_width,
+    'y3w': default_col_width,
+    'y4w': default_col_width,
+    'y5w': default_col_width,
+    'yrw': default_col_width,
+    'npvw': default_col_width,
 }
-line_length = sum(column_widths.values())
+line_length = sum(col_widths.values())
 thin_line = '-' * line_length
 thick_line = '=' * line_length
+
 print(thick_line)
 
-head_template = '{0:>{idw}}{1:>{icw}}{2:>{y1w}}{3:>{y2w}}{4:>{y3w}}{5:>{y4w}}{6:>{y5w}}' \
-                '{7:>{yrw}}{8:>{npvw}}'
-data_template = '{0:>{idw}}{1:>{icw},}{2:>{y1w},}{3:>{y2w},}{4:>{y3w},}{5:>{y4w},}{6:>{y5w},}' \
-                '{7:>{yrw},}{8:>{npvw},.2f}'
+row_template = '{:>{idw}}{:>{icw}}{:>{y1w}}{:>{y2w}}{:>{y3w}}{:>{y4w}}{:>{y5w}}{:>{yrw}}{:>{npvw}}'
 
-print(head_template.format(
-    '#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV', **column_widths))
+headers = ['#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV']
+print(row_template.format(*headers, **col_widths))
 
 print(thin_line)
 
@@ -40,18 +45,14 @@ file = open('Data_ลงทุน.txt', 'r')
 line = file.readline()
 
 while line:
-    data = [int(part) for part in line.split()]
-    real_eastate_number = data[0]
-    initial_capital = data[1]
-    year1 = data[2]
-    year2 = data[3]
-    year3 = data[4]
-    year4 = data[5]
-    year5 = data[6]
-    yield_rate = data[7]
-    cfs = [year1, year2, year3, year4, year5]
+    raw_data = [int(part) for part in line.split()]
+    initial_capital = raw_data[1]
+    cfs = raw_data[2:7]
+    yield_rate = raw_data[7]
     npv = calculate_npv(cfs, yield_rate / 100, initial_capital)
-    print(data_template.format(*data, npv, **column_widths))
+    row_data = raw_data + [npv]
+    formatted_row_data = format_row_data(row_data)
+    print(row_template.format(*formatted_row_data, **col_widths))
     line = file.readline()
 
 print(thick_line)
