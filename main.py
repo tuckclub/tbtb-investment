@@ -34,9 +34,9 @@ col_widths = {
     'yrw': default_col_width,
     'npvw': default_col_width,
 }
-line_length = sum(col_widths.values())
-thin_line = '-' * line_length
-thick_line = '=' * line_length
+display_width = sum(col_widths.values())
+thin_line = '-' * display_width
+thick_line = '=' * display_width
 row_template = '{:>{idw}}{:>{icw}}{:>{y1w}}{:>{y2w}}{:>{y3w}}{:>{y4w}}{:>{y5w}}{:>{yrw}}{:>{npvw}}'
 headers = ['#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV']
 
