@@ -9,14 +9,30 @@ def calculate_npv(cfs, k, i):
     return summ - i
 
 
-line_length = 136
+default_column_width = 13
+column_widths = {
+    'idw': 3,
+    'icw': 17,
+    'y1w': default_column_width,
+    'y2w': default_column_width,
+    'y3w': default_column_width,
+    'y4w': default_column_width,
+    'y5w': default_column_width,
+    'yrw': default_column_width,
+    'npvw': default_column_width,
+}
+line_length = sum(column_widths.values())
 thin_line = '-' * line_length
 thick_line = '=' * line_length
 print(thick_line)
 
-template = '{0:>3}{1:>20}{2:>15}{3:>15}{4:>15}{5:>15}{6:>15}{7:>15}{8:>15}'
-print(template.format(
-    '#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV'))
+head_template = '{0:>{idw}}{1:>{icw}}{2:>{y1w}}{3:>{y2w}}{4:>{y3w}}{5:>{y4w}}{6:>{y5w}}' \
+                '{7:>{yrw}}{8:>{npvw}}'
+data_template = '{0:>{idw}}{1:>{icw},}{2:>{y1w},}{3:>{y2w},}{4:>{y3w},}{5:>{y4w},}{6:>{y5w},}' \
+                '{7:>{yrw},}{8:>{npvw},.2f}'
+
+print(head_template.format(
+    '#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV', **column_widths))
 
 print(thin_line)
 
@@ -35,8 +51,7 @@ while line:
     yield_rate = data[7]
     cfs = [year1, year2, year3, year4, year5]
     npv = calculate_npv(cfs, yield_rate / 100, initial_capital)
-    template = '{0:>3,}{1:>20,}{2:>15,}{3:>15,}{4:>15,}{5:>15,}{6:>15,}{7:>15,}{8:>15,.2f}'
-    print(template.format(*data, npv))
+    print(data_template.format(*data, npv, **column_widths))
     line = file.readline()
 
 print(thick_line)
