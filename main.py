@@ -1,18 +1,13 @@
 # การวิเคราะห์การลงทุน
 
-def calculate_npv(cfs, k, i):
-    summ = 0
-    for index, cf in enumerate(cfs):
-        t = index + 1
-        summ += cf / (1 + k) ** t
-    return summ - i
+import numpy_financial as npf
 
 
 def format_row_data(data):
     tint = "{0:,}"
     tfloat = "{0:,.2f}"
     tpercent = "{0}%"
-    templates = [tint, tint, tint, tint, tint, tint, tint, tpercent, tfloat]
+    templates = [tint, tint, tint, tint, tint, tint, tint, tpercent, tfloat, tpercent]
     return [templates[idx].format(value) for idx, value in enumerate(data)]
 
 
@@ -33,12 +28,13 @@ col_widths = {
     'y5w': default_col_width,
     'yrw': default_col_width,
     'npvw': default_col_width,
+    'irrw': default_col_width,
 }
 display_width = sum(col_widths.values())
 thin_line = '-' * display_width
 thick_line = '=' * display_width
-row_template = '{:>{idw}}{:>{icw}}{:>{y1w}}{:>{y2w}}{:>{y3w}}{:>{y4w}}{:>{y5w}}{:>{yrw}}{:>{npvw}}'
-headers = ['#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV']
+row_template = '{:>{idw}}{:>{icw}}{:>{y1w}}{:>{y2w}}{:>{y3w}}{:>{y4w}}{:>{y5w}}{:>{yrw}}{:>{npvw}}{:>{irrw}}'
+headers = ['#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Yield Rate', 'NPV', 'IRR']
 
 print(thick_line)
 print(row_template.format(*headers, **col_widths))
@@ -47,10 +43,13 @@ print(thin_line)
 for line in stream_lines_from_file('Data_ลงทุน.txt', 'r'):
     raw_data = [int(part) for part in line.split()]
     initial_capital = raw_data[1]
-    cfs = raw_data[2:7]
-    yield_rate = raw_data[7]
-    npv = calculate_npv(cfs, yield_rate / 100, initial_capital)
-    row_data = raw_data + [npv]
+    cash_flows = raw_data[1:7]
+    cash_flows[0] = -cash_flows[0]
+    yield_percent = raw_data[7]
+    npv = npf.npv(yield_percent / 100, cash_flows)
+    irr = npf.irr(cash_flows)
+    irr_percent = int(round(irr * 100))
+    row_data = raw_data + [npv, irr_percent]
     formatted_row_data = format_row_data(row_data)
     print(row_template.format(*formatted_row_data, **col_widths))
 
