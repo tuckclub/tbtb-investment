@@ -42,9 +42,8 @@ print(thin_line)
 
 for line in stream_lines_from_file('Data_ลงทุน.txt', 'r'):
     raw_data = [float(part) for part in line.split()]
-    initial_capital = raw_data[1]
+    raw_data[1] = -raw_data[1]
     cash_flows = raw_data[1:7]
-    cash_flows[0] = -cash_flows[0]
     yield_percent = raw_data[7]
     npv = npf.npv(yield_percent / 100, cash_flows)
     irr = npf.irr(cash_flows)
