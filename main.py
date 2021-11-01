@@ -4,9 +4,9 @@ import numpy_financial as npf
 
 
 def format_row_data(data):
-    tint = "{0:,}"
-    tfloat = "{0:,.2f}"
-    tpercent = "{0}%"
+    tint = "{:,.0f}"
+    tfloat = "{:,.2f}"
+    tpercent = "{:.0f}%"
     templates = [tint, tint, tint, tint, tint, tint, tint, tpercent, tfloat, tpercent]
     return [templates[idx].format(value) for idx, value in enumerate(data)]
 
@@ -41,7 +41,7 @@ print(row_template.format(*headers, **col_widths))
 print(thin_line)
 
 for line in stream_lines_from_file('Data_ลงทุน.txt', 'r'):
-    raw_data = [int(part) for part in line.split()]
+    raw_data = [float(part) for part in line.split()]
     initial_capital = raw_data[1]
     cash_flows = raw_data[1:7]
     cash_flows[0] = -cash_flows[0]
