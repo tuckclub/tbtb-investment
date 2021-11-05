@@ -43,11 +43,12 @@ with open('Data_ลงทุน.txt', 'r') as data_file:
         raw_data = [float(part) for part in line.split()]
         raw_data[1] = -raw_data[1]
         cash_flows = raw_data[1:7]
-        yield_percent = raw_data[7]
-        npv = npf.npv(yield_percent / 100, cash_flows)
+        discount_rate_percent = raw_data[7]
+        discount_rate = discount_rate_percent / 100
+        npv = npf.npv(discount_rate, cash_flows)
         irr = npf.irr(cash_flows)
         irr_percent = int(round(irr * 100))
-        worth_investing = npv > 0 and irr_percent > yield_percent
+        worth_investing = npv > 0 and irr_percent > discount_rate_percent
         row_data = raw_data + [npv, irr_percent, worth_investing]
         formatted_row_data = format_row_data(row_data)
         print(row_template.format(*formatted_row_data, **col_widths))
