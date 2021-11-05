@@ -2,40 +2,28 @@
 
 import numpy_financial as npf
 
-default_col_width = 13
-col_widths = {
-    'idw': 3,
-    'icw': 17,
-    'y1w': default_col_width,
-    'y2w': default_col_width,
-    'y3w': default_col_width,
-    'y4w': default_col_width,
-    'y5w': default_col_width,
-    'yrw': default_col_width,
-    'npvw': default_col_width,
-    'irrw': default_col_width,
-    'wthw': default_col_width,
-}
-display_width = sum(col_widths.values())
-thin_line = '-' * display_width
-thick_line = '=' * display_width
-row_template = '{:>{idw}}{:>{icw}}{:>{y1w}}{:>{y2w}}{:>{y3w}}{:>{y4w}}{:>{y5w}}' \
-               '{:>{yrw}}{:>{npvw}}{:>{irrw}}{:>{wthw}}'
-headers = ['#', 'Initial Capital', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5',
-           'Yield Rate', 'NPV', 'IRR', 'Worth']
+headers = ['#', 'Investment', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Discount Rate', 'NPV', 'IRR', 'Worth']
+
+num_std_cols = len(headers) - 1
+row_template = '{:>3}' + '{:>15}' * num_std_cols
+line_length = 3 + 15 * num_std_cols
+thin_line = '-' * line_length
+thick_line = '=' * line_length
 
 print(thick_line)
-print(row_template.format(*headers, **col_widths))
+print(row_template.format(*headers))
 print(thin_line)
 
 
-def format_row_data(data):
+def format_row_data(data_list):
     tint = '{:,.0f}'
     tfloat = '{:,.2f}'
     tpercent = '{:.0f}%'
     tbool = '{}'
     templates = [tint, tint, tint, tint, tint, tint, tint, tpercent, tfloat, tpercent, tbool]
-    return [templates[idx].format(value) for idx, value in enumerate(data)]
+    # before [1.0, -200000.0,   60000.0,  60000.0,  50000.0,  60000.0,  50000.0,  6.0,  36873.052574959205, 13,   True]
+    # after  ['1', '-200,000', '60,000', '60,000', '50,000', '60,000', '50,000', '6%', '36,873.05',       '13%', 'True']
+    return [templates[idx].format(value) for idx, value in enumerate(data_list)]
 
 
 with open('Data_ลงทุน.txt', 'r') as data_file:
@@ -51,6 +39,6 @@ with open('Data_ลงทุน.txt', 'r') as data_file:
         worth_investing = npv > 0 and irr_percent > discount_rate_percent
         row_data = raw_data + [npv, irr_percent, worth_investing]
         formatted_row_data = format_row_data(row_data)
-        print(row_template.format(*formatted_row_data, **col_widths))
+        print(row_template.format(*formatted_row_data))
 
 print(thick_line)
