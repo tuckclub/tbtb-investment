@@ -20,10 +20,9 @@ print(thin_line)
 def format_row_data(data_list):
     tint = '{:,.0f}'
     tfloat = '{:,.2f}'
-    tintpercent = '{:.0f} %'
-    tfloatpercent = '{:.2f} %'
+    tintpercent = '{:.0f}%'
     ttext = '{}'
-    templates = [tint, tint, tint, tint, tint, tint, tint, tintpercent, tfloat, tfloatpercent, ttext]
+    templates = [tint, tint, tint, tint, tint, tint, tint, tintpercent, tfloat, tintpercent, ttext]
     # before [1.0, -200000.0,   60000.0,  60000.0,  50000.0,  60000.0,  50000.0,  6.0,  36873.052574959205, 13,   True]
     # after  ['1', '-200,000', '60,000', '60,000', '50,000', '60,000', '50,000', '6%', '36,873.05',       '13%', 'True']
     return [templates[idx].format(value) for idx, value in enumerate(data_list)]
@@ -46,7 +45,7 @@ with open('Data_ลงทุน.txt', 'r') as data_file:
         discount_rate = discount_rate_percent / 100
         npv = npf.npv(discount_rate, cash_flows)
         irr = npf.irr(cash_flows)
-        irr_percent = irr * 100
+        irr_percent = int(round(irr * 100))
         worth_investing = npv > 0 and irr_percent > discount_rate_percent
         suggestion = 'Invest' if worth_investing else "Don't Invest"
         row_data = raw_data + [npv, irr_percent, suggestion]
@@ -74,11 +73,12 @@ irr_min = min(irrs)
 irr_max = max(irrs)
 irr_mean = statistics.mean(irrs)
 irr_stdev = statistics.stdev(irrs, irr_mean)
-t_irr = '{:>15}{:>13,.2f} %'
+t_irr = '{:>15}{:>14,.0f}%'
+t_irr_float = '{:>15}{:>14,.2f}%'
 print(t_irr.format('IRR Min:', irr_min))
 print(t_irr.format('IRR Max:', irr_max))
-print(t_irr.format('IRR Mean:', irr_mean))
-print(t_irr.format('IRR STDEV:', irr_stdev))
+print(t_irr_float.format('IRR Mean:', irr_mean))
+print(t_irr_float.format('IRR STDEV:', irr_stdev))
 
 print(thick_line)
 print()
