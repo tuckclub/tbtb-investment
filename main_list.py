@@ -3,7 +3,8 @@
 import statistics
 import numpy_financial as npf
 
-headers = ['#', 'Investment', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Discount Rate', 'NPV', 'IRR', 'Worth']
+headers = ['#', 'Investment', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5', 'Discount Rate',
+           'NPV', 'IRR', 'Suggestion']
 
 num_std_cols = len(headers) - 1
 row_template = '{:>3}' + '{:>15}' * num_std_cols
@@ -21,8 +22,8 @@ def format_row_data(data_list):
     tfloat = '{:,.2f}'
     tintpercent = '{:.0f} %'
     tfloatpercent = '{:.2f} %'
-    tbool = '{}'
-    templates = [tint, tint, tint, tint, tint, tint, tint, tintpercent, tfloat, tfloatpercent, tbool]
+    ttext = '{}'
+    templates = [tint, tint, tint, tint, tint, tint, tint, tintpercent, tfloat, tfloatpercent, ttext]
     # before [1.0, -200000.0,   60000.0,  60000.0,  50000.0,  60000.0,  50000.0,  6.0,  36873.052574959205, 13,   True]
     # after  ['1', '-200,000', '60,000', '60,000', '50,000', '60,000', '50,000', '6%', '36,873.05',       '13%', 'True']
     return [templates[idx].format(value) for idx, value in enumerate(data_list)]
@@ -47,7 +48,8 @@ with open('Data_ลงทุน.txt', 'r') as data_file:
         irr = npf.irr(cash_flows)
         irr_percent = irr * 100
         worth_investing = npv > 0 and irr_percent > discount_rate_percent
-        row_data = raw_data + [npv, irr_percent, worth_investing]
+        suggestion = 'Invest' if worth_investing else "Don't Invest"
+        row_data = raw_data + [npv, irr_percent, suggestion]
         row_data_list.append(row_data)
         formatted_row_data = format_row_data(row_data)
         print(row_template.format(*formatted_row_data))
