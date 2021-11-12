@@ -61,11 +61,11 @@ npv_min = min(npvs)
 npv_max = max(npvs)
 npv_mean = statistics.mean(npvs)
 npv_stdev = statistics.stdev(npvs, npv_mean)
-t_npv = "{:>15}{:>15,.2f}"
-print(t_npv.format("NPV Min:", npv_min))
-print(t_npv.format("NPV Max:", npv_max))
-print(t_npv.format("NPV Mean:", npv_mean))
-print(t_npv.format("NPV STDEV:", npv_stdev))
+t_npv = '{:>15}{:>15,.2f}'
+print(t_npv.format('NPV Min:', npv_min))
+print(t_npv.format('NPV Max:', npv_max))
+print(t_npv.format('NPV Mean:', npv_mean))
+print(t_npv.format('NPV STDEV:', npv_stdev))
 
 print(thin_line)
 
@@ -74,11 +74,11 @@ irr_min = min(irrs)
 irr_max = max(irrs)
 irr_mean = statistics.mean(irrs)
 irr_stdev = statistics.stdev(irrs, irr_mean)
-t_irr = "{:>15}{:>13,.2f} %"
-print(t_irr.format("IRR Min:", irr_min))
-print(t_irr.format("IRR Max:", irr_max))
-print(t_irr.format("IRR Mean:", irr_mean))
-print(t_irr.format("IRR STDEV:", irr_stdev))
+t_irr = '{:>15}{:>13,.2f} %'
+print(t_irr.format('IRR Min:', irr_min))
+print(t_irr.format('IRR Max:', irr_max))
+print(t_irr.format('IRR Mean:', irr_mean))
+print(t_irr.format('IRR STDEV:', irr_stdev))
 
 print(thick_line)
 print()
